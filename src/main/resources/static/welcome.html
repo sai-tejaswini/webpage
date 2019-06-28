@@ -1,0 +1,123 @@
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	<h1>Welcome</h1>
+	<form>
+	Name:
+	<input type="text" id="name">
+	<br>
+	Gender:
+	<input type="text" id="gender">
+	<br> 
+	Age:
+	<input type="text" id="age">
+	<br>
+	<input type="button" onclick="post()" value="Submit">
+	</form>
+	
+	<br>
+	<br>
+	
+	<form id="myForm" >
+	Id:
+	<input type="text" id="uid">
+	<br>
+	Name:
+	<input type="text" id="uname">
+	<br>
+	Gender:
+	<input type="text" id="ugender">
+	<br> 
+	Age:
+	<input type="text" id="uage">
+	<br>
+	<input type="button" onclick="update()" value="Update">
+	</form>
+	
+	<form>
+	Id:
+	<input type="text" id="deleteid">
+	<br>
+	<input type="button" onclick="delete1()" value="Delete">
+	</form>
+	
+	<button onclick="retrieve()">Get</button>
+	<p id="result">Result is</p>
+	
+	<script>  
+  function retrieve(){
+	  var divid = document.getElementById("result");
+	  divid.innerHTML = " ";
+	  var url = "http://localhost:8080/retrieve";
+	  fetch(url)
+	    .then(res => res.json())
+	    .then(function(res) {
+	    	var pid = document.getElementById("result");
+	    	var i=0;
+	    	for(i in res){
+	        	var ul = document.createElement("ul");
+	        	divid.appendChild(ul);
+	        	ul.append("");
+	        	for(var j in res[i]){
+	        	var li = document.createElement("li");
+	        	li.append(j + " : ")
+	        	li.append(res[i][j]);
+	        	ul.append(li);
+	        	}
+	        }
+	    });
+  }
+
+  function post(){
+	  var nameid = document.getElementById("name").value;
+	  var genderid = document.getElementById("gender").value;
+	  var ageid = document.getElementById("age").value;
+	fetch("http://localhost:8080/post",{
+			method: "POST",
+			headers: {
+				'Accept': 'application/json',
+			    'Content-Type': 'application/json'
+			  },
+	    body: JSON.stringify({name:nameid,gender:genderid,age:ageid
+	    })})
+	.then(res => res.json());
+  }
+  
+  function update(){
+	  alert("update");
+	  var idid = parseInt(document.getElementById("uid").value);
+	  var nameid = document.getElementById("uname").value;
+	  var genderid = document.getElementById("ugender").value;
+	  var ageid = document.getElementById("uage").value;
+	fetch("http://localhost:8080/put",{
+			method: "PUT",
+			headers: {
+				'Accept': 'application/json',
+			    'Content-Type': 'application/json'
+			  },
+	    body: JSON.stringify({id:idid,name:nameid,gender:genderid,age:ageid
+	    })})
+	.then(res => res.json());
+	  alert("update end");
+
+  }
+  
+  function delete1(){
+	  alert("delete");
+	  var idid = parseInt(document.getElementById("deleteid").value);
+	  alert(idid);
+
+	fetch("/delete",{
+			method: "DELETE",
+		    body: JSON.stringify({id:idid
+		    })})
+	.then(res => res.json());
+	  alert("delete end");
+
+  }
+</script>
+</body>
+</html>
